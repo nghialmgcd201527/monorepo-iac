@@ -5,14 +5,14 @@ from typing import Dict
 
 
 # Pipeline definition imports
-from pipelines.pipeline_demo import DemoPipeline
-from pipelines.pipeline_hotsite import HotsitePipeline
-from pipelines.pipeline_ts_common import TscommonPipeline
+from pipelines.pipeline_cognito import CognitoPipeline
+from pipelines.pipeline_email import EmailPipeline
+# from pipelines.pipeline_ts_common import TscommonPipeline
 
 ### Add your pipeline configuration here
 service_map: Dict[str, ServicePipeline]  = {
     # folder-name -> pipeline-class
-    'demo': DemoPipeline(),
-    'hotsite': HotsitePipeline(),
-    'ts-common': TscommonPipeline()
+    'cognito': CognitoPipeline(),
+    'email': EmailPipeline(),
+    # 'ts-common': TscommonPipeline()
 }

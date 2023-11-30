@@ -1,0 +1,5 @@
+{
+    "cognito": "codepipeline-cognito-main",
+    "email": "codepipeline-email-main"
+    // "ts-common": "pipeline-ts-common-main"
+}

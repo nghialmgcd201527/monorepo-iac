@@ -39,8 +39,8 @@ ifneq ("$(monorepo-name)","")
 endif
 	@( \
 		source $(VENV_ACTIVATE); \
-		echo cdk deploy MonoRepoStack ${params_monorepo}; \
-		cdk deploy MonoRepoStack ${params_monorepo}; \
+		echo cdk deploy VizerpserverlessStack ${params_monorepo}; \
+		cdk deploy VizerpserverlessStack ${params_monorepo}; \
 	  \
 	)
 
@@ -59,7 +59,7 @@ deploy: deploy-core deploy-pipelines
 destroy-core:
 	@( \
 		source $(VENV_ACTIVATE); \
-		cdk destroy MonoRepoStack; \
+		cdk destroy VizerpserverlessStack; \
 	   \
 	)
 

@@ -1,5 +1,0 @@
-{
-    "demo": "codepipeline-demo-main",
-    "hotsite": "codepipeline-hotsite-main",
-    "ts-common": "pipeline-ts-common-main"
-}

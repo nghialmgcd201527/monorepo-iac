@@ -11,7 +11,7 @@ import tempfile
 import json
 
 
-class MonorepoStack(Stack):
+class VizerpserverlessStack(Stack):
     exported_monorepo: codecommit.Repository
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
@@ -20,8 +20,8 @@ class MonorepoStack(Stack):
         ### Stack Parameters ###
         monorepo_name = CfnParameter(self, 'MonorepoName',
                                          type='String',
-                                         description='CodeCommit Monorepo name',
-                                         default='monorepo-sample')
+                                         description='CodeCommit Viz erp serverless',
+                                         default='viz-erp-serverless')
 
         branch_for_trigger = 'main'
 
@@ -57,7 +57,7 @@ class MonorepoStack(Stack):
                                        action="lambda:InvokeFunction",
                                        source_arn=f"arn:aws:codecommit:{region}:{account}:{repository_name}")
         monorepo_lambda.add_to_role_policy(
-            iam.PolicyStatement(resources=[f'arn:aws:ssm:{region}:{account}:parameter/MonoRepoTrigger/*'],
+            iam.PolicyStatement(resources=[f'arn:aws:ssm:{region}:{account}:parameter/VizerpserverlessTrigger/*'],
                                 actions=['ssm:GetParameter', 'ssm:GetParameters', 'ssm:PutParameter']))
         monorepo_lambda.add_to_role_policy(
             iam.PolicyStatement(resources=[f'arn:aws:codepipeline:{region}:{account}:*'],
@@ -89,8 +89,8 @@ def zip_sample():
     tempdir = tempfile.mkdtemp('bucket-sample')
     with zipfile.ZipFile(os.path.join(tempdir, 'sample.zip'), 'w') as zf:
         # zf.writestr(f'monorepo-{branch_name}.json', json.dumps(codepipeline_map))
-        for dirname, subdirs, files in os.walk("./monorepo-sample/"):
+        for dirname, subdirs, files in os.walk("./viz-erp-serverless/"):
             for filename in files:
-                relativepath = os.path.join(dirname.replace("./monorepo-sample/", ""), filename)
+                relativepath = os.path.join(dirname.replace("./viz-erp-serverless/", ""), filename)
                 zf.write(os.path.join(dirname, filename), arcname=relativepath)
     return tempdir
