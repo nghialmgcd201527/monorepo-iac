@@ -108,7 +108,7 @@ def build_parameter_name(repository, branch_name):
     Create the name of SSM ParameterStore LastCommit
     """
     # TODO must have the branch name in the parameter?
-    return f'/MonoRepoTrigger/{repository}/{branch_name}/LastCommit'
+    return f'/VizerpserverlessTrigger/{repository}/{branch_name}/LastCommit'
 
 
 def get_last_commit(repository, commit_id, branch_name):
@@ -133,7 +133,7 @@ def get_last_commit(repository, commit_id, branch_name):
 
 def update_last_commit(repository, commit_id, branch_name):
     """
-    Update '/MonoRepoTrigger/{repository}/LastCommit' SSM Parameter Store with the current commit that triggered the lambda
+    Update '/VizerpserverlessTrigger/{repository}/LastCommit' SSM Parameter Store with the current commit that triggered the lambda
     """
     ssm.put_parameter(Name=build_parameter_name(repository, branch_name),
                       Description='Keep track of the last commit already triggered',
