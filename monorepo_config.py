@@ -5,6 +5,8 @@ from typing import Dict
 
 
 # Pipeline definition imports
+from pipelines.pipeline_documentNumber import DocumentNumberPipeline
+from pipelines.pipeline_setting import SettingPipeline
 from pipelines.pipeline_cognito import CognitoPipeline
 from pipelines.pipeline_email import EmailPipeline
 # from pipelines.pipeline_ts_common import TscommonPipeline
@@ -12,7 +14,12 @@ from pipelines.pipeline_email import EmailPipeline
 ### Add your pipeline configuration here
 service_map: Dict[str, ServicePipeline]  = {
     # folder-name -> pipeline-class
+    'document_number': DocumentNumberPipeline(),
+    'setting': SettingPipeline(),
+}
+
+serverless_service_map: Dict[str, ServicePipeline]  = {
+    # folder-name -> pipeline-class
     'cognito': CognitoPipeline(),
     'email': EmailPipeline(),
-    # 'ts-common': TscommonPipeline()
 }

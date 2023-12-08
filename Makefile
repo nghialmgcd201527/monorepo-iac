@@ -34,6 +34,16 @@ endif
 
 # Deploy monorepo core stack
 deploy-core :
+# ifneq ("$(monorepo-name)","")
+# 	$(eval params_monorepo := --parameters MonorepoName=$(monorepo-name))
+# endif
+# 	@( \
+# 		source $(VENV_ACTIVATE); \
+# 		echo cdk deploy VizerpserverlessStack ${params_monorepo}; \
+# 		cdk deploy VizerpserverlessStack ${params_monorepo}; \
+# 	  \
+# 	)
+
 ifneq ("$(monorepo-name)","")
 	$(eval params_monorepo := --parameters MonorepoName=$(monorepo-name))
 endif
@@ -44,11 +54,28 @@ endif
 	  \
 	)
 
+ifneq ("$(monorepo-name)","")
+	$(eval params_monorepo := --parameters MonorepoName=$(monorepo-name))
+endif
+	@( \
+		source $(VENV_ACTIVATE); \
+		echo cdk deploy SharedServiceStack ${params_monorepo}; \
+		cdk deploy SharedServiceStack ${params_monorepo}; \
+	  \
+	)
+
 # Deploy pipelines stack
 deploy-pipelines:
 	@( \
 		source $(VENV_ACTIVATE); \
 		cdk deploy PipelinesStack; \
+	   \
+	)
+
+deploy-serverlessPipelines:
+	@( \
+		source $(VENV_ACTIVATE); \
+		cdk deploy ServerlessPipelineStack; \
 	   \
 	)
 
