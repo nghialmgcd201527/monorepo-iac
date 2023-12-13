@@ -10,34 +10,15 @@ from aws_cdk import (RemovalPolicy, CfnOutput,
 from constructs import Construct
 
 
-class SettingPipeline(ServicePipeline):
+class CognitoPipeline(ServicePipeline):
 
     def pipeline_name(self) -> str:
-        return 'setting-dev'
-    
-    def codebuild_name(self) -> str:
-        return 'setting-main'
-    
-    def project_name(self) -> str:
-        return 'setting'
+        return 'codepipeline-cognito-main'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
-        # select_artifact_build = codebuild.PipelineProject(scope, f'SelectArtifactBuild-{codebuild_name}',
-        #                                                   build_spec=codebuild.BuildSpec.from_source_filename("setting/buildspec.yml"),
-        #                                                   environment=dict(build_image=codebuild.LinuxBuildImage.STANDARD_5_0),
-        #                                                   project_name="setting-main")
-        
-        web_identity_codebuild = codebuild.Project(
-            scope,
-            f'SelectArtifactBuild-{pipeline_name}',
-            project_name = f"{pipeline_name}-main",
-            build_spec=codebuild.BuildSpec.from_source_filename("setting/buildspec.yml"),
-            source = codebuild.Source.code_commit(
-                repository=codecommit.Repository.from_repository_name(scope, "ShareRepo", repository_name="shared-service"),
-                branch_or_ref="develop"
-            )
-        )
-
+        select_artifact_build = codebuild.PipelineProject(scope, f'SelectArtifactBuild-{pipeline_name}',
+                                                          build_spec=codebuild.BuildSpec.from_source_filename("cognito/buildspec.yml"),
+                                                          environment=dict(build_image=codebuild.LinuxBuildImage.STANDARD_5_0))
         source_output = codepipeline.Artifact()
         service_artifact = codepipeline.Artifact()
         # role_build = 
@@ -49,20 +30,20 @@ class SettingPipeline(ServicePipeline):
                                                                  actions=[
                                                                      codepipeline_actions.CodeCommitSourceAction(
                                                                          action_name="CodeCommit_Source",
-                                                                         branch="develop",
+                                                                         branch="main",
                                                                          repository=code_commit,
                                                                          output=source_output,
                                                                          trigger=codepipeline_actions.CodeCommitTrigger.NONE)]),
                                          codepipeline.StageProps(stage_name="Build",
                                                                  actions=[
                                                                      codepipeline_actions.CodeBuildAction(
-                                                                         action_name="shared-service-setting-main",
-                                                                         project=web_identity_codebuild,
+                                                                         action_name="viz-erp-serverless-cognito-main",
+                                                                         project=select_artifact_build,
                                                                          environment_variables={
                                                                             "AWS_SECRET_ARN":codebuild.BuildEnvironmentVariable(
                                                                                 value="arn:aws:secretsmanager:ap-southeast-1:592463980955:secret:develop-secret-UY8nQC"),
                                                                             "STAGE":codebuild.BuildEnvironmentVariable(
-                                                                                value="dev"),
+                                                                                value="main"),
                                                                          },
                                                                          input=source_output,
                                                                          outputs=[service_artifact])]), ])
