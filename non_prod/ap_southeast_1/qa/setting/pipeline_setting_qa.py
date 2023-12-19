@@ -11,25 +11,29 @@ from constructs import Construct
 import aws_cdk as core
 
 from common.pipelines.abstract_service_pipeline import ServicePipeline
+from helper import config
 
 class SettingPipelineQa(ServicePipeline):
 
     def pipeline_name(self) -> str:
         return 'setting-qa'
-    
-    def project_name(self) -> str:
-        return 'setting'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
         
+        conf = config.Config(scope.node.try_get_context('environment'))
+        folder_repo = conf.get('setting_repo')
+        root_repo   = conf.get('shared_service_repo')
+        stage       = conf.get('stage')
+        branch      = conf.get('branch')
+        secret      = conf.get('secret')
         secret = secretsmanager.Secret.from_secret_name_v2(
-            scope, "MyExistingSecret", 
-            "develop-secret-UY8nQC"
+            scope, "ExistingSecret", 
+            f"{secret}"
         )
         artifact_bucket = s3.Bucket(
                 scope,
-                f"{pipeline_name}-pp-log",
-                bucket_name= f"{pipeline_name}-pp-log"
+                f"{pipeline_name}-artifact",
+                bucket_name= f"{pipeline_name}-artifact"
         )
 
         source_output = codepipeline.Artifact()
@@ -40,7 +44,7 @@ class SettingPipelineQa(ServicePipeline):
                                      artifact_bucket=artifact_bucket,
                                      role=iam.Role.from_role_arn(
                                         scope,
-                                        "SettingQaPipelineRoleARN",
+                                        f"{folder_repo}{stage}PipelineRoleARN",
                                         role_arn = f"{core.Fn.import_value('PipelineRoleARN')}"
                                     ),
                                      stages=[
@@ -48,7 +52,7 @@ class SettingPipelineQa(ServicePipeline):
                                                                  actions=[
                                                                      codepipeline_actions.CodeCommitSourceAction(
                                                                          action_name="CodeCommit_Source",
-                                                                         branch="qa",
+                                                                         branch=f"{branch}",
                                                                          repository=code_commit,
                                                                          output=source_output,
                                                                          code_build_clone_output = True,
@@ -56,17 +60,17 @@ class SettingPipelineQa(ServicePipeline):
                                          codepipeline.StageProps(stage_name="Build",
                                                                  actions=[
                                                                      codepipeline_actions.CodeBuildAction(
-                                                                         action_name="shared-service-setting-main",
+                                                                         action_name=f"{root_repo}-{folder_repo}-main",
                                                                          project=codebuild.Project.from_project_arn(
                                                                                 scope,
-                                                                                "SettingQaCodebuildARN",
-                                                                                project_arn = f"{core.Fn.import_value('SettingCodebuildARN')}"
+                                                                                f"{folder_repo}{stage}CodebuildARN",
+                                                                                project_arn = f"{core.Fn.import_value(f'{folder_repo}CodebuildARN')}"
                                                                          ),
                                                                          environment_variables={
                                                                             "AWS_SECRET_ARN":codebuild.BuildEnvironmentVariable(
                                                                                 value=secret.secret_arn),
                                                                             "STAGE":codebuild.BuildEnvironmentVariable(
-                                                                                value="qa"),
+                                                                                value=f"{branch}"),
                                                                          },
                                                                          input=source_output,
                                                                          outputs=[service_artifact])]), ])

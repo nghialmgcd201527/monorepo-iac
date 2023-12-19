@@ -16,7 +16,7 @@ from helper import config
 class SettingPipeline(ServicePipeline):
 
     def pipeline_name(self) -> str:
-        return 'main'
+        return 'setting-dev'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
         
@@ -33,8 +33,8 @@ class SettingPipeline(ServicePipeline):
         )
         artifact_bucket = s3.Bucket(
                 scope,
-                f"{folder_repo}-{pipeline_name}-{stage}-artifact",
-                bucket_name= f"{folder_repo}-{pipeline_name}-{stage}-artifact"
+                f"{pipeline_name}-artifact",
+                bucket_name= f"{pipeline_name}-artifact"
         )
 
         source_output = codepipeline.Artifact()

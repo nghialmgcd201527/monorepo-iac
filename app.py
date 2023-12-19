@@ -17,7 +17,7 @@ iam = IamStack(app,"IamStack")
 ShareService = SharedServiceStack(app, "SharedServiceStack")
 Codebuild_ShareService_setting = CodebuildSharedServiceStack(app,"CodebuildSharedServiceStack", ShareService.exported_monorepo)
 PipelineSharedServiceDev = PipelineSharedServiceStackDev(app, "PipelineSharedServiceStackDev", ShareService.exported_monorepo)
-# PipelineSharedServiceQa = PipelineSharedServiceStackQa(app, "PipelineSharedServiceStackQa", ShareService.exported_monorepo)
+PipelineSharedServiceQa = PipelineSharedServiceStackQa(app, "PipelineSharedServiceStackQa", ShareService.exported_monorepo)
 
 
 # VizErpServerless = VizerpserverlessStack(app, "VizerpserverlessStack")

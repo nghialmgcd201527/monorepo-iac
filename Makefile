@@ -100,7 +100,7 @@ deploy-codebuild:
 deploy-pipelines-qa:
 	@( \
 		source $(VENV_ACTIVATE); \
-		cdk deploy PipelineSharedServiceStackQa; \
+		cdk deploy PipelineSharedServiceStackQa --context environment=qa; \
 	   \
 	)
 
