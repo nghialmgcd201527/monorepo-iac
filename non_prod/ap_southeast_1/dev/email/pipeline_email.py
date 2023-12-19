@@ -1,4 +1,3 @@
-from core.abstract_service_pipeline import ServicePipeline
 from aws_cdk import (RemovalPolicy, CfnOutput, 
                      aws_iam as iam,
                      aws_codebuild as codebuild,
@@ -9,15 +8,17 @@ from aws_cdk import (RemovalPolicy, CfnOutput,
                      aws_cloudfront as cloudfront)
 from constructs import Construct
 
+from common.pipelines.abstract_service_pipeline import ServicePipeline
 
-class TscommonPipeline(ServicePipeline):
+
+class EmailPipeline(ServicePipeline):
 
     def pipeline_name(self) -> str:
-        return 'codepipeline-ts-common-main'
+        return 'codepipeline-email-main'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
         select_artifact_build = codebuild.PipelineProject(scope, f'SelectArtifactBuild-{pipeline_name}',
-                                                          build_spec=codebuild.BuildSpec.from_source_filename("ts-common/buildspec.yml"),
+                                                          build_spec=codebuild.BuildSpec.from_source_filename("email/buildspec.yml"),
                                                           environment=dict(build_image=codebuild.LinuxBuildImage.STANDARD_5_0))
         source_output = codepipeline.Artifact()
         service_artifact = codepipeline.Artifact()
@@ -37,7 +38,7 @@ class TscommonPipeline(ServicePipeline):
                                          codepipeline.StageProps(stage_name="Build",
                                                                  actions=[
                                                                      codepipeline_actions.CodeBuildAction(
-                                                                         action_name="ts-common-main",
+                                                                         action_name="viz-erp-serverless-email-main",
                                                                          project=select_artifact_build,
                                                                          environment_variables={
                                                                             "AWS_SECRET_ARN":codebuild.BuildEnvironmentVariable(

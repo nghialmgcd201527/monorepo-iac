@@ -1,0 +1,13 @@
+#aws account
+dev_account_id : "756955845548"
+qa_account_id : "565133770688"
+
+stage : "dev"
+branch : "develop"
+
+shared_service_path : "./shared-service/"
+shared_service_repo : "shared-service"
+shared_service_name : "SharedService"
+
+setting_repo : "setting"
+secret : "develop-secret-UY8nQC"

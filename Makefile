@@ -33,7 +33,7 @@ endif
 	)
 
 # Deploy monorepo core stack
-deploy-core :
+ :
 # ifneq ("$(monorepo-name)","")
 # 	$(eval params_monorepo := --parameters MonorepoName=$(monorepo-name))
 # endif
@@ -54,23 +54,56 @@ endif
 	  \
 	)
 
+deploy-shareservice :
+
 ifneq ("$(monorepo-name)","")
 	$(eval params_monorepo := --parameters MonorepoName=$(monorepo-name))
 endif
 	@( \
 		source $(VENV_ACTIVATE); \
-		echo cdk deploy SharedServiceStack ${params_monorepo}; \
-		cdk deploy SharedServiceStack ${params_monorepo}; \
+		echo cdk deploy SharedServiceStack ${params_monorepo} --context environment=dev; \
+		cdk deploy SharedServiceStack ${params_monorepo} --context environment=dev; \
 	  \
 	)
-
-# Deploy pipelines stack
+# Diff pipelines stack
+diff-pipelines:
+	@( \
+		source $(VENV_ACTIVATE); \
+		cdk diff PipelinesStack; \
+	   \
+	)
+# Deploy pipelines stack Dev
 deploy-pipelines:
 	@( \
 		source $(VENV_ACTIVATE); \
-		cdk deploy PipelinesStack; \
+		cdk deploy PipelineSharedServiceStackDev --context environment=dev; \
 	   \
 	)
+
+# Deploy iam stack
+deploy-iam:
+	@( \
+		source $(VENV_ACTIVATE); \
+		cdk deploy IamStack --context environment=dev; \
+	   \
+	)	
+
+# Deploy codebuild stack
+deploy-codebuild:
+	@( \
+		source $(VENV_ACTIVATE); \
+		cdk deploy CodebuildSharedServiceStack --context environment=dev; \
+	   \
+	)	
+
+# Deploy pipelines stack QA
+deploy-pipelines-qa:
+	@( \
+		source $(VENV_ACTIVATE); \
+		cdk deploy PipelineSharedServiceStackQa; \
+	   \
+	)
+
 
 deploy-serverlessPipelines:
 	@( \

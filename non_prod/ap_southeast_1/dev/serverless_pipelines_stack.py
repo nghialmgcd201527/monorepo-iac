@@ -1,10 +1,10 @@
 from aws_cdk import (Stack,
                      aws_codecommit as codecommit)
 from constructs import Construct
-import monorepo_config
+import monorepo_config_pipeline
 
-class ServerlessPipelineStack(Stack):
+class ServerlessPipelineStackDev(Stack):
     def __init__(self, scope: Construct, construct_id: str, codecommit: codecommit, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        for dir_name, service_pipeline in monorepo_config.serverless_service_map.items():
+        for dir_name, service_pipeline in monorepo_config_pipeline.serverless_service_map.items():
             service_pipeline.build_pipeline(self, codecommit, service_pipeline.pipeline_name(), dir_name)

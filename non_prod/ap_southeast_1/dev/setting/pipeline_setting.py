@@ -1,4 +1,3 @@
-from core.abstract_service_pipeline import ServicePipeline
 from aws_cdk import (RemovalPolicy, CfnOutput, 
                      aws_iam as iam,
                      aws_codebuild as codebuild,
@@ -6,63 +5,73 @@ from aws_cdk import (RemovalPolicy, CfnOutput,
                      aws_codepipeline_actions as codepipeline_actions,
                      aws_codecommit as codecommit,
                      aws_s3 as s3,
-                     aws_cloudfront as cloudfront)
+                     aws_cloudfront as cloudfront,
+                     aws_secretsmanager as secretsmanager)
 from constructs import Construct
+import aws_cdk as core
 
+from common.pipelines.abstract_service_pipeline import ServicePipeline
+from helper import config
 
 class SettingPipeline(ServicePipeline):
 
     def pipeline_name(self) -> str:
-        return 'setting-dev'
-    
-    def codebuild_name(self) -> str:
-        return 'setting-main'
-    
-    def project_name(self) -> str:
-        return 'setting'
+        return 'main'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
-        # select_artifact_build = codebuild.PipelineProject(scope, f'SelectArtifactBuild-{codebuild_name}',
-        #                                                   build_spec=codebuild.BuildSpec.from_source_filename("setting/buildspec.yml"),
-        #                                                   environment=dict(build_image=codebuild.LinuxBuildImage.STANDARD_5_0),
-        #                                                   project_name="setting-main")
         
-        web_identity_codebuild = codebuild.Project(
-            scope,
-            f'SelectArtifactBuild-{pipeline_name}',
-            project_name = f"{pipeline_name}-main",
-            build_spec=codebuild.BuildSpec.from_source_filename("setting/buildspec.yml"),
-            source = codebuild.Source.code_commit(
-                repository=codecommit.Repository.from_repository_name(scope, "ShareRepo", repository_name="shared-service"),
-                branch_or_ref="develop"
-            )
+        conf = config.Config(scope.node.try_get_context('environment'))
+        folder_repo = conf.get('setting_repo')
+        root_repo   = conf.get('shared_service_repo')
+        stage       = conf.get('stage')
+        branch      = conf.get('branch')
+        secret      = conf.get('secret')
+
+        secret = secretsmanager.Secret.from_secret_name_v2(
+            scope, "ExistingSecret", 
+            f"{secret}"
+        )
+        artifact_bucket = s3.Bucket(
+                scope,
+                f"{folder_repo}-{pipeline_name}-{stage}-artifact",
+                bucket_name= f"{folder_repo}-{pipeline_name}-{stage}-artifact"
         )
 
         source_output = codepipeline.Artifact()
         service_artifact = codepipeline.Artifact()
-        # role_build = 
 
         return codepipeline.Pipeline(scope, pipeline_name,
                                      pipeline_name=pipeline_name,
+                                     artifact_bucket=artifact_bucket,
+                                     role=iam.Role.from_role_arn(
+                                        scope,
+                                        f"{folder_repo}{stage}PipelineRoleARN",
+                                        role_arn = f"{core.Fn.import_value('PipelineRoleARN')}"
+                                    ),
                                      stages=[
                                          codepipeline.StageProps(stage_name="Source",
                                                                  actions=[
                                                                      codepipeline_actions.CodeCommitSourceAction(
                                                                          action_name="CodeCommit_Source",
-                                                                         branch="develop",
+                                                                         branch=f"{branch}",
                                                                          repository=code_commit,
                                                                          output=source_output,
+                                                                         code_build_clone_output = True,
                                                                          trigger=codepipeline_actions.CodeCommitTrigger.NONE)]),
                                          codepipeline.StageProps(stage_name="Build",
                                                                  actions=[
                                                                      codepipeline_actions.CodeBuildAction(
-                                                                         action_name="shared-service-setting-main",
-                                                                         project=web_identity_codebuild,
+                                                                         action_name=f"{root_repo}-{folder_repo}-main",
+                                                                         project=codebuild.Project.from_project_arn(
+                                                                                scope,
+                                                                                f"{folder_repo}{stage}CodebuildARN",
+                                                                                project_arn = f"{core.Fn.import_value(f'{folder_repo}CodebuildARN')}"
+                                                                         ),
                                                                          environment_variables={
                                                                             "AWS_SECRET_ARN":codebuild.BuildEnvironmentVariable(
-                                                                                value="arn:aws:secretsmanager:ap-southeast-1:592463980955:secret:develop-secret-UY8nQC"),
+                                                                                value=secret.secret_arn),
                                                                             "STAGE":codebuild.BuildEnvironmentVariable(
-                                                                                value="dev"),
+                                                                                value=f"{branch}"),
                                                                          },
                                                                          input=source_output,
                                                                          outputs=[service_artifact])]), ])

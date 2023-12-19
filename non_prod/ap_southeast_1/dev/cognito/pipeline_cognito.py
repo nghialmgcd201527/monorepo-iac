@@ -1,4 +1,3 @@
-from core.abstract_service_pipeline import ServicePipeline
 from aws_cdk import (RemovalPolicy, CfnOutput, 
                      aws_iam as iam,
                      aws_codebuild as codebuild,
@@ -8,6 +7,8 @@ from aws_cdk import (RemovalPolicy, CfnOutput,
                      aws_s3 as s3,
                      aws_cloudfront as cloudfront)
 from constructs import Construct
+
+from common.pipelines.abstract_service_pipeline import ServicePipeline
 
 
 class CognitoPipeline(ServicePipeline):
