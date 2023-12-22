@@ -104,7 +104,6 @@ deploy-pipelines-qa:
 	   \
 	)
 
-
 deploy-serverlessPipelines:
 	@( \
 		source $(VENV_ACTIVATE); \

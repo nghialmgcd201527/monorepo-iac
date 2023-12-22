@@ -18,13 +18,12 @@ iam = IamStack(app,"IamStack")
 
 # shared-service repo
 ShareService = SharedServiceStack(app, "SharedServiceStack")
-# codebuild for setting serverless
-Codebuild_ShareService_setting = CodebuildSharedServiceStack(app,"CodebuildSharedServiceStack", ShareService.exported_monorepo)
+# codebuild for setting,documentnumber serverless
+Codebuild_ShareService = CodebuildSharedServiceStack(app,"CodebuildSharedServiceStack", ShareService.exported_monorepo)
 # Codepipeline for setting serverless dev
 PipelineSharedServiceDev = PipelineSharedServiceStackDev(app, "PipelineSharedServiceStackDev", ShareService.exported_monorepo)
 # Codepipeline for setting serverless qa
 PipelineSharedServiceQa = PipelineSharedServiceStackQa(app, "PipelineSharedServiceStackQa", ShareService.exported_monorepo)
-
 
 
 # VizErpServerless = VizerpserverlessStack(app, "VizerpserverlessStack")

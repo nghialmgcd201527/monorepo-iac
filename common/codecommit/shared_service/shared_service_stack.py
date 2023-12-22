@@ -46,7 +46,7 @@ class SharedServiceStack(Stack):
         self.exported_monorepo = monorepo
 
 
-    def create_lambda(self, region, account, repository_name, function_name,shared_service_name):
+    def create_lambda(self, region, account, repository_name, function_name, shared_service_name):
         # Lambda function which triggers code pipeline according
         # Function must run with concurrency = 1 -- to avoid race condition
         monorepo_lambda = lambda_.Function(self, "CodeCommitEventHandler",
@@ -62,7 +62,7 @@ class SharedServiceStack(Stack):
                                        action="lambda:InvokeFunction",
                                        source_arn=f"arn:aws:codecommit:{region}:{account}:{repository_name}")
         monorepo_lambda.add_to_role_policy(
-            iam.PolicyStatement(resources=[f'arn:aws:ssm:{region}:{account}:parameter/{shared_service_name}Trigger/*'],
+            iam.PolicyStatement(resources=[f'arn:aws:ssm:{region}:{account}:parameter/VizerpserverlessTrigger/*'],
                                 actions=['ssm:GetParameter', 'ssm:GetParameters', 'ssm:PutParameter']))
         monorepo_lambda.add_to_role_policy(
             iam.PolicyStatement(resources=[f'arn:aws:codepipeline:{region}:{account}:*'],

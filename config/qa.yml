@@ -11,3 +11,5 @@ shared_service_name : "SharedService"
 
 setting_repo : "setting"
 secret : "qa-secret-aqAWEt"
+
+document_repo : "document-number"

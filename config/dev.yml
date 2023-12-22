@@ -1,13 +1,22 @@
 #aws account
 dev_account_id : "756955845548"
 qa_account_id : "565133770688"
-
 stage : "dev"
 branch : "develop"
+secret : "develop-secret-UY8nQC"
 
+#shared-service repo
 shared_service_path : "./shared-service/"
 shared_service_repo : "shared-service"
 shared_service_name : "SharedService"
-
 setting_repo : "setting"
-secret : "develop-secret-UY8nQC"
+document_repo : "document-number"
+
+#viz erp serverless repo
+viz_erp_serverless_repo : ""
+viz_erp_serverless_path : "./viz-erp-serverless/"
+viz_erp_serverless_repo : "viz-erp-serverless"
+viz_erp_serverless_name : "VizErpServerless"
+email_repo : "email"
+cognito_repo : "cognito"
+storage_repo : "storage"

@@ -13,15 +13,15 @@ import aws_cdk as core
 from common.pipelines.abstract_service_pipeline import ServicePipeline
 from helper import config
 
-class SettingPipeline(ServicePipeline):
+class DocumentNumberPipelineQa(ServicePipeline):
 
     def pipeline_name(self) -> str:
-        return 'setting-dev'
+        return 'document-number-qa'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
         
         conf = config.Config(scope.node.try_get_context('environment'))
-        folder_repo = conf.get('setting_repo')
+        folder_repo = conf.get('document_repo')
         root_repo   = conf.get('shared_service_repo')
         stage       = conf.get('stage')
         branch      = conf.get('branch')
@@ -37,6 +37,7 @@ class SettingPipeline(ServicePipeline):
                 bucket_name= f"{pipeline_name}-artifact",
                 auto_delete_objects= True,
                 removal_policy=RemovalPolicy.DESTROY
+                
         )
 
         source_output = codepipeline.Artifact()

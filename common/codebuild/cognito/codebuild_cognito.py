@@ -11,14 +11,14 @@ from constructs import Construct
 import aws_cdk as core
 from helper import config
 
-class SettingCodebuild(ServiceCodebuild):
+class CognitoCodebuild(ServiceCodebuild):
 
     def codebuild_name(self) -> str:
         return 'build'
     
     def build_codebuild(self, scope: Construct, code_commit: codecommit.Repository, codebuild_name: str, service_name: str):
         conf = config.Config(scope.node.try_get_context('environment'))
-        folder_repo = conf.get('setting_repo')
+        folder_repo = conf.get('cognito_repo')
         build_project = codebuild.Project(
             scope,
             f'{folder_repo}-{codebuild_name}-main',

@@ -27,13 +27,15 @@ class SettingPipelineQa(ServicePipeline):
         branch      = conf.get('branch')
         secret      = conf.get('secret')
         secret = secretsmanager.Secret.from_secret_name_v2(
-            scope, "ExistingSecret", 
+            scope, f"{folder_repo}", 
             f"{secret}"
         )
         artifact_bucket = s3.Bucket(
                 scope,
                 f"{pipeline_name}-artifact",
-                bucket_name= f"{pipeline_name}-artifact"
+                bucket_name= f"{pipeline_name}-artifact",
+                auto_delete_objects= True,
+                removal_policy=RemovalPolicy.DESTROY
         )
 
         source_output = codepipeline.Artifact()

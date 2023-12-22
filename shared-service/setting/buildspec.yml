@@ -1,0 +1,16 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    SLACK_WEBHOOKS: $AWS_SECRET_ARN:SLACK_WEBHOOKS_TEST
+    SLACK_IDS: $AWS_SECRET_ARN:SLACK_IDS
+phases:
+  build:
+    commands:
+      - uname -a
+      - export SERVICE_NAME="setting"
+  post_build:
+    commands:
+      - echo $CODEBUILD_BUILD_SUCCEEDING
+      - echo $SLACK_IDS
+      - bash bin/build-notify.sh $CODEBUILD_BUILD_SUCCEEDING 0 $STAGE $SLACK_WEBHOOKS $SERVICE_NAME

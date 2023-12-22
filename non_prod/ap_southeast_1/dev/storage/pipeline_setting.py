@@ -13,16 +13,16 @@ import aws_cdk as core
 from common.pipelines.abstract_service_pipeline import ServicePipeline
 from helper import config
 
-class SettingPipeline(ServicePipeline):
+class StoragePipeline(ServicePipeline):
 
     def pipeline_name(self) -> str:
-        return 'setting-dev'
+        return 'storage-dev'
 
     def build_pipeline(self, scope: Construct, code_commit: codecommit.Repository, pipeline_name: str, service_name: str):
         
         conf = config.Config(scope.node.try_get_context('environment'))
-        folder_repo = conf.get('setting_repo')
-        root_repo   = conf.get('shared_service_repo')
+        folder_repo = conf.get('storage_repo')
+        root_repo   = conf.get('viz_erp_serverless_repo')
         stage       = conf.get('stage')
         branch      = conf.get('branch')
         secret      = conf.get('secret')
