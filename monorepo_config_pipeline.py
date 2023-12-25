@@ -7,7 +7,7 @@ from non_prod.ap_southeast_1.dev.cognito.pipeline_cognito_bk import CognitoPipel
 from non_prod.ap_southeast_1.dev.documentnumber.pipeline_document_number import DocumentNumberPipeline
 from non_prod.ap_southeast_1.dev.email.pipeline_email_bk import EmailPipeline
 from non_prod.ap_southeast_1.dev.setting.pipeline_setting import SettingPipeline
-from non_prod.ap_southeast_1.dev.storage.pipeline_setting import StoragePipeline
+from non_prod.ap_southeast_1.dev.storage.pipeline_storage import StoragePipeline
 from non_prod.ap_southeast_1.qa.documentnumber.pipeline_document_number import DocumentNumberPipelineQa
 from non_prod.ap_southeast_1.qa.setting.pipeline_setting_qa import SettingPipelineQa
 
@@ -27,9 +27,16 @@ service_map_shared_service_qa: Dict[str, ServicePipeline]  = {
     'setting': SettingPipelineQa(),
 }
 
-serverless_service_map_dev: Dict[str, ServicePipeline]  = {
+service_map_viz_erp_serverless_dev: Dict[str, ServicePipeline]  = {
     # folder-name -> pipeline-class
     'cognito': CognitoPipeline(),
     'email': EmailPipeline(),
     'storage' : StoragePipeline(),
+}
+
+service_map_viz_erp_serverless_qa: Dict[str, ServicePipeline]  = {
+    # folder-name -> pipeline-class
+    # 'cognito': CognitoPipelineQa(),
+    # 'email': EmailPipelineQa(),
+    # 'storage' : StoragePipelineQa(),
 }

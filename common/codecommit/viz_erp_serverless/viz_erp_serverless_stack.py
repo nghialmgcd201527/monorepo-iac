@@ -38,7 +38,7 @@ class VizerpserverlessStack(Stack):
 
         monorepo = self.create_codecommit_repo(repository_name, branch_for_trigger,name_repo,name_path,name_format)
 
-        monorepo_lambda = self.create_lambda(region, account, repository_name, function_name,name_format)
+        monorepo_lambda = self.create_lambda(region, account, repository_name, function_name)
         
         monorepo.grant_read(monorepo_lambda)
         monorepo.notify(f"arn:aws:lambda:{region}:{account}:function:{function_name}",
@@ -46,7 +46,7 @@ class VizerpserverlessStack(Stack):
         self.exported_monorepo = monorepo
 
 
-    def create_lambda(self, region, account, repository_name, function_name,name_format):
+    def create_lambda(self, region, account, repository_name, function_name):
         # Lambda function which triggers code pipeline according
         # Function must run with concurrency = 1 -- to avoid race condition
         monorepo_lambda = lambda_.Function(self, "CodeCommitEventHandler",
@@ -62,7 +62,7 @@ class VizerpserverlessStack(Stack):
                                        action="lambda:InvokeFunction",
                                        source_arn=f"arn:aws:codecommit:{region}:{account}:{repository_name}")
         monorepo_lambda.add_to_role_policy(
-            iam.PolicyStatement(resources=[f'arn:aws:ssm:{region}:{account}:parameter/{name_format}Trigger/*'],
+            iam.PolicyStatement(resources=[f'arn:aws:ssm:{region}:{account}:parameter/VizerpserverlessTrigger/*'],
                                 actions=['ssm:GetParameter', 'ssm:GetParameters', 'ssm:PutParameter']))
         monorepo_lambda.add_to_role_policy(
             iam.PolicyStatement(resources=[f'arn:aws:codepipeline:{region}:{account}:*'],
