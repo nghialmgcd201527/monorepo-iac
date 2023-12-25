@@ -28,7 +28,7 @@ class VizerpserverlessStack(Stack):
                                          description='CodeCommit of Shared Service',
                                          default=f'{name_repo}')
 
-        branch_for_trigger = 'develop'
+        branch_for_trigger = 'main'
         branch_for_trigger_repo = ['qa','main','develop']
         function_name = f'{monorepo_name.value_as_string}-codecommit-handler'
         repository_name = monorepo_name.value_as_string

@@ -45,6 +45,19 @@ endif
 	  \
 	)
 
+# Diff monorepo viz erp serverless stack
+diff-vizerpserverles :
+
+ifneq ("$(monorepo-name)","")
+	$(eval params_monorepo := --parameters MonorepoName=$(monorepo-name))
+endif
+	@( \
+		source $(VENV_ACTIVATE); \
+		echo cdk diff VizerpserverlessStack ${params_monorepo} --context environment=dev; \
+		cdk diff VizerpserverlessStack ${params_monorepo} --context environment=dev; \
+	  \
+	)
+
 # Deploy monorepo share service stack
 deploy-shareservice :
 

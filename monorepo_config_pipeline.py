@@ -3,13 +3,16 @@
 from typing import Dict
 
 from common.pipelines.abstract_service_pipeline import ServicePipeline
-from non_prod.ap_southeast_1.dev.cognito.pipeline_cognito_bk import CognitoPipeline
+from non_prod.ap_southeast_1.dev.cognito.pipeline_cognito import CognitoPipeline
 from non_prod.ap_southeast_1.dev.documentnumber.pipeline_document_number import DocumentNumberPipeline
-from non_prod.ap_southeast_1.dev.email.pipeline_email_bk import EmailPipeline
+from non_prod.ap_southeast_1.dev.email.pipeline_email import EmailPipeline
 from non_prod.ap_southeast_1.dev.setting.pipeline_setting import SettingPipeline
 from non_prod.ap_southeast_1.dev.storage.pipeline_storage import StoragePipeline
+from non_prod.ap_southeast_1.qa.cognito.pipeline_cognito import CognitoPipelineQa
 from non_prod.ap_southeast_1.qa.documentnumber.pipeline_document_number import DocumentNumberPipelineQa
+from non_prod.ap_southeast_1.qa.email.pipeline_email import EmailPipelineQa
 from non_prod.ap_southeast_1.qa.setting.pipeline_setting_qa import SettingPipelineQa
+from non_prod.ap_southeast_1.qa.storage.pipeline_storage import StoragePipelineQa
 
 
 # Pipeline definition imports
@@ -36,7 +39,7 @@ service_map_viz_erp_serverless_dev: Dict[str, ServicePipeline]  = {
 
 service_map_viz_erp_serverless_qa: Dict[str, ServicePipeline]  = {
     # folder-name -> pipeline-class
-    # 'cognito': CognitoPipelineQa(),
-    # 'email': EmailPipelineQa(),
-    # 'storage' : StoragePipelineQa(),
+    'cognito': CognitoPipelineQa(),
+    'email': EmailPipelineQa(),
+    'storage' : StoragePipelineQa(),
 }
