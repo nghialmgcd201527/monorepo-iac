@@ -19,6 +19,7 @@ class DocumentNumberCodebuild(ServiceCodebuild):
     def build_codebuild(self, scope: Construct, code_commit: codecommit.Repository, codebuild_name: str, service_name: str):
         conf = config.Config(scope.node.try_get_context('environment'))
         folder_repo = conf.get('document_repo')
+        root_repo   = conf.get('shared_service_repo')
         build_project = codebuild.Project(
             scope,
             f'{folder_repo}-{codebuild_name}-main',
@@ -29,7 +30,7 @@ class DocumentNumberCodebuild(ServiceCodebuild):
                 privileged = True
             ),
             source = codebuild.Source.code_commit(
-                repository = codecommit.Repository.from_repository_name(scope, f"{folder_repo}", repository_name="shared-service"),
+                repository = codecommit.Repository.from_repository_name(scope, f"{folder_repo}", repository_name=f"{root_repo}"),
                 branch_or_ref = "develop",
                 clone_depth    = 0,
                 fetch_submodules    = True
