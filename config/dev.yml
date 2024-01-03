@@ -11,6 +11,10 @@ shared_service_repo : "shared-service"
 shared_service_name : "SharedService"
 setting_repo : "setting"
 document_repo : "document-number"
+locale_repo : "locale"
+audit_repo : "audit"
+notification_repo : "notification"
+
 
 #viz erp serverless repo
 viz_erp_serverless_path : "./viz-erp-serverless/"

@@ -8,6 +8,9 @@ from non_prod.ap_southeast_1.dev.documentnumber.pipeline_document_number import 
 from non_prod.ap_southeast_1.dev.email.pipeline_email import EmailPipeline
 from non_prod.ap_southeast_1.dev.setting.pipeline_setting import SettingPipeline
 from non_prod.ap_southeast_1.dev.storage.pipeline_storage import StoragePipeline
+from non_prod.ap_southeast_1.dev.locale.pipeline_locale import LocalePipeline
+from non_prod.ap_southeast_1.dev.audit.pipeline_audit import AuditPipeline
+from non_prod.ap_southeast_1.dev.notification.pipeline_notification import NotificationPipeline
 from non_prod.ap_southeast_1.qa.cognito.pipeline_cognito import CognitoPipelineQa
 from non_prod.ap_southeast_1.qa.documentnumber.pipeline_document_number import DocumentNumberPipelineQa
 from non_prod.ap_southeast_1.qa.email.pipeline_email import EmailPipelineQa
@@ -22,6 +25,9 @@ service_map_shared_service_dev: Dict[str, ServicePipeline]  = {
     # folder-name -> pipeline-class
     'document-number': DocumentNumberPipeline(),
     'setting': SettingPipeline(),
+    'locale': LocalePipeline(),
+    'audit': AuditPipeline(),
+    'notification': NotificationPipeline()
 }
 # QA shared-service
 service_map_shared_service_qa: Dict[str, ServicePipeline]  = {

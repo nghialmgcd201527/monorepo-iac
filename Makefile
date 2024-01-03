@@ -28,7 +28,7 @@ ifeq ("$(region)","")
 endif
 	@( \
 		source $(VENV_ACTIVATE); \
-		cdk bootstrap aws://${account-id}/${region}; \
+		cdk bootstrap aws://${account-id}/${region} --context environment=dev; \
 	  \
 	)
 

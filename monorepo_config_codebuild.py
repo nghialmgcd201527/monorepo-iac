@@ -7,7 +7,9 @@ from common.codebuild.documentnumber.codebuild_document_number import DocumentNu
 from common.codebuild.email.codebuild_email import EmailCodebuild
 from common.codebuild.setting.codebuild_setting import SettingCodebuild
 from common.codebuild.storage.codebuild_storage import StorageCodebuild
-
+from common.codebuild.locale.codebuild_locale import LocaleCodebuild
+from common.codebuild.audit.codebuild_audit import AuditCodebuild
+from common.codebuild.notification.codebuild_notification import NotificationCodebuild
 
 # Codebuild definition imports
 
@@ -23,4 +25,7 @@ service_map_shared_service: Dict[str, ServiceCodebuild]  = {
     # folder-name -> codebuild-class
     'document-number': DocumentNumberCodebuild(),
     'setting': SettingCodebuild(),
+    'locale': LocaleCodebuild(),
+    'audit': AuditCodebuild(),
+    'notification': NotificationCodebuild(),
 }
